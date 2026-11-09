@@ -5,6 +5,7 @@ import java.util.List;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import javax.swing.table.*;
+import javax.swing.JOptionPane;
 
 /**
  * Начална форма за контролна работа № 1, вариант A (Книги).
@@ -15,8 +16,8 @@ import javax.swing.table.*;
 public class MainForm extends javax.swing.JFrame {
     private List<Book> items = new ArrayList<Book>();
     private DefaultListModel<Book> listModel = new DefaultListModel<>();
+    private DefaultComboBoxModel<String> genres = new DefaultComboBoxModel();
     private String[] COLUMNS = {"Заглавие", "Автор", "Жанр", "Цена"};
-    private List<Book> shown;
     
     private DefaultTableModel tblModel = new DefaultTableModel(COLUMNS, 0)
     {
@@ -27,7 +28,6 @@ public class MainForm extends javax.swing.JFrame {
     };
     
     private void show(List<Book> data) {
-        shown = data;
         listModel.clear();
         tblModel.setRowCount(0);
         
@@ -39,11 +39,26 @@ public class MainForm extends javax.swing.JFrame {
         lblStatus.setText("Показани: " + listModel.getSize());
     }
     
+    private void clearFields() {
+        txtTitle.setText("");
+        txtAuthor.setText("");
+        cmbGenre.setSelectedIndex(0);
+        txtPrice.setText("");
+    }
+    
     public MainForm() {
         initComponents();
         setLocationRelativeTo(null);
         
         tblItems.setModel(tblModel);
+        
+        String[] arrGenres = {"Роман", "Учебник", "Поезия", "Детска"};
+        cmbGenre.removeAllItems();
+        cmbGenre.setModel(genres);
+        
+        for(String genre : arrGenres){
+            genres.addElement(genre);
+        }
         
         items.add(new Book("Под игото", "Иван Вазов", "Роман", 18.90));
         items.add(new Book("Java за начинаещи", "Кети Сиера", "Учебник", 54.00));
@@ -128,6 +143,11 @@ public class MainForm extends javax.swing.JFrame {
         pnlButtons.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         btnAdd.setText("Добави");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
         pnlButtons.add(btnAdd);
 
         btnDelete.setText("Изтрий");
@@ -143,6 +163,44 @@ public class MainForm extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(778, 598));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        String title = txtTitle.getText().trim();
+        String author = txtAuthor.getText().trim();
+        String genre = cmbGenre.getSelectedItem().toString();
+        double price;
+        
+        if(title.length() == 0) {
+            JOptionPane.showMessageDialog(this, "Моля въведете заглавие", "Грешка", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if(author.length() == 0) {
+            JOptionPane.showMessageDialog(this, "Моля въведете автор", "Грешка", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        try {
+            price = Integer.parseInt(txtPrice.getText().trim());
+        }
+        catch(NumberFormatException err) {
+            JOptionPane.showMessageDialog(this, "Моля въведете правилна цена", "Грешка", JOptionPane.ERROR_MESSAGE);
+            
+            return;
+        }
+        
+        if(price < 0) {
+            JOptionPane.showMessageDialog(this, "Моля въведете правилна цена", "Грешка", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        Book item = new Book(title, author, genre, price);
+        
+        items.add(item);
+        show(items);
+        clearFields();
+        lblStatus.setText("Добавен " + item.toString());
+    }//GEN-LAST:event_btnAddActionPerformed
 
     public static void main(String[] args) {
         FlatLightLaf.setup();

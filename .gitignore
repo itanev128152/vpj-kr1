@@ -1,0 +1,6 @@
+target/
+nbproject/private/
+nb-configuration.xml
+*.class
+.idea/
+.DS_Store

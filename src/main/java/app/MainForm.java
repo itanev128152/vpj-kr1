@@ -1,6 +1,10 @@
 package app;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.formdev.flatlaf.FlatLightLaf;
+import javax.swing.*;
+import javax.swing.table.*;
 
 /**
  * Начална форма за контролна работа № 1, вариант A (Книги).
@@ -9,10 +13,43 @@ import com.formdev.flatlaf.FlatLightLaf;
  * GEN-BEGIN и GEN-END се генерира от дизайнера и не се редактира.
  */
 public class MainForm extends javax.swing.JFrame {
-
+    private List<Book> items = new ArrayList<Book>();
+    private DefaultListModel<Book> listModel = new DefaultListModel<>();
+    private String[] COLUMNS = {"Заглавие", "Автор", "Жанр", "Цена"};
+    private List<Book> shown;
+    
+    private DefaultTableModel tblModel = new DefaultTableModel(COLUMNS, 0)
+    {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false; 
+        }
+    };
+    
+    private void show(List<Book> data) {
+        shown = data;
+        listModel.clear();
+        tblModel.setRowCount(0);
+        
+        for(Book item : data){
+            listModel.addElement(item);
+            tblModel.addRow(item.getProperties());
+        }
+        
+        lblStatus.setText("Показани: " + listModel.getSize());
+    }
+    
     public MainForm() {
         initComponents();
         setLocationRelativeTo(null);
+        
+        tblItems.setModel(tblModel);
+        
+        items.add(new Book("Под игото", "Иван Вазов", "Роман", 18.90));
+        items.add(new Book("Java за начинаещи", "Кети Сиера", "Учебник", 54.00));
+        items.add(new Book("Ян Бибиян", "Елин Пелин", "Детска", 12.50));
+        
+        show(items);
     }
 
     @SuppressWarnings("unchecked")

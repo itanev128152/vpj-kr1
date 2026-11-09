@@ -29,6 +29,26 @@ public class Book {
         return this.price;
     }
     
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+    
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+    
+    public void setTitle(double price) {
+        this.price = price;
+    }
+    
+    public Object[] getProperties(){
+        return new Object[] {title, author, genre, price};
+    }
+    
     @Override
     public String toString() {
         return title + author + "(" + genre +  ")";

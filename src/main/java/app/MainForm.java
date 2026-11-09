@@ -46,6 +46,18 @@ public class MainForm extends javax.swing.JFrame {
         txtPrice.setText("");
     }
     
+    private Book getSelectedBook() {
+        int row = tblItems.getSelectedRow();
+        
+        if (row < 0) { 
+            lblStatus.setText("Маркирайте ред.");
+            return null;
+        }
+        
+        Book item = items.get(row);
+        return item;
+    }
+    
     public MainForm() {
         initComponents();
         setLocationRelativeTo(null);
@@ -151,6 +163,11 @@ public class MainForm extends javax.swing.JFrame {
         pnlButtons.add(btnAdd);
 
         btnDelete.setText("Изтрий");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
         pnlButtons.add(btnDelete);
 
         pnlBottom.add(pnlButtons, java.awt.BorderLayout.CENTER);
@@ -185,7 +202,6 @@ public class MainForm extends javax.swing.JFrame {
         }
         catch(NumberFormatException err) {
             JOptionPane.showMessageDialog(this, "Моля въведете правилна цена", "Грешка", JOptionPane.ERROR_MESSAGE);
-            
             return;
         }
         
@@ -201,6 +217,18 @@ public class MainForm extends javax.swing.JFrame {
         clearFields();
         lblStatus.setText("Добавен " + item.toString());
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        Book selected = getSelectedBook();
+        
+        if (selected == null) return;
+        
+        int answer = JOptionPane.showConfirmDialog(this, "Да изтрия ли " + selected.toString() + "?", "Изтриване", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (answer == JOptionPane.YES_OPTION) {
+            items.remove(selected);
+            show(items);
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     public static void main(String[] args) {
         FlatLightLaf.setup();

@@ -17,6 +17,7 @@ public class MainForm extends javax.swing.JFrame {
     private List<Book> items = new ArrayList<Book>();
     private DefaultListModel<Book> listModel = new DefaultListModel<>();
     private DefaultComboBoxModel<String> genres = new DefaultComboBoxModel();
+    private DefaultComboBoxModel<String> filter = new DefaultComboBoxModel();
     private String[] COLUMNS = {"Заглавие", "Автор", "Жанр", "Цена"};
     
     private DefaultTableModel tblModel = new DefaultTableModel(COLUMNS, 0)
@@ -28,15 +29,27 @@ public class MainForm extends javax.swing.JFrame {
     };
     
     private void show(List<Book> data) {
+        int shownCount = 0;
+        String selectedFilter = cmbFilter.getSelectedItem().toString();
+        
         listModel.clear();
         tblModel.setRowCount(0);
         
         for(Book item : data){
+            if(selectedFilter != "Всички")
+                if(item.getGenre() != selectedFilter) continue;
+            
             listModel.addElement(item);
             tblModel.addRow(item.getProperties());
+            shownCount++;
         }
         
-        lblStatus.setText("Показани: " + listModel.getSize());
+        if(items.size() == shownCount) {
+            lblStatus.setText("Показани: " + listModel.size());
+        }
+        else {
+            lblStatus.setText("Показани: " + shownCount + " от " + items.size());
+        }
     }
     
     private void clearFields() {
@@ -64,6 +77,7 @@ public class MainForm extends javax.swing.JFrame {
         
         tblItems.setModel(tblModel);
         
+        // cmbGenre setup
         String[] arrGenres = {"Роман", "Учебник", "Поезия", "Детска"};
         cmbGenre.removeAllItems();
         cmbGenre.setModel(genres);
@@ -72,6 +86,16 @@ public class MainForm extends javax.swing.JFrame {
             genres.addElement(genre);
         }
         
+        // cmbFilter setup
+        String[] arrFilter = {"Всички", "Роман", "Учебник", "Поезия", "Детска"};
+        cmbFilter.removeAllItems();
+        cmbFilter.setModel(filter);
+        
+        for(String strFilter : arrFilter){
+            filter.addElement(strFilter);
+        }
+        
+        // default items setup
         items.add(new Book("Под игото", "Иван Вазов", "Роман", 18.90));
         items.add(new Book("Java за начинаещи", "Кети Сиера", "Учебник", 54.00));
         items.add(new Book("Ян Бибиян", "Елин Пелин", "Детска", 12.50));
@@ -110,6 +134,12 @@ public class MainForm extends javax.swing.JFrame {
 
         lblFilter.setText("Филтър:");
         pnlFilter.add(lblFilter);
+
+        cmbFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbFilterActionPerformed(evt);
+            }
+        });
         pnlFilter.add(cmbFilter);
 
         getContentPane().add(pnlFilter, java.awt.BorderLayout.NORTH);
@@ -229,6 +259,10 @@ public class MainForm extends javax.swing.JFrame {
             show(items);
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void cmbFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFilterActionPerformed
+        show(items);
+    }//GEN-LAST:event_cmbFilterActionPerformed
 
     public static void main(String[] args) {
         FlatLightLaf.setup();

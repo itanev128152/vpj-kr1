@@ -142,7 +142,7 @@ public class MainForm extends javax.swing.JFrame {
         });
         pnlFilter.add(cmbFilter);
 
-        getContentPane().add(pnlFilter, java.awt.BorderLayout.NORTH);
+        getContentPane().add(pnlFilter, java.awt.BorderLayout.LINE_START);
 
         tblItems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -207,7 +207,7 @@ public class MainForm extends javax.swing.JFrame {
 
         getContentPane().add(pnlBottom, java.awt.BorderLayout.SOUTH);
 
-        setSize(new java.awt.Dimension(778, 598));
+        setSize(new java.awt.Dimension(957, 598));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
